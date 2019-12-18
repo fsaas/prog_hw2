@@ -1,0 +1,47 @@
+(define (contains x set)
+  (if (null? set)
+    #f
+    (if (eq? x (car set))
+      #t
+      (contains x (cdr set))
+    )  
+  )
+)
+
+(define (is-empty s) (null? s))
+(define (singleton-set x) (cons x '()))
+
+(define (intersection s1 s2) 
+  (cond
+    ((is-empty s1) '())
+    ((is-empty s2) '())
+    ((contains (car s1) s2) (cons (car s1) (intersection (cdr s1) s2)))
+    (else (intersection (cdr s1) s2))
+  )
+)
+
+(define (union s1 s2)
+  (cond 
+    ((is-empty s1) s2)
+    ((is-empty s2) s1)
+    ((contains (car s1) s2) (union (cdr s1) s2))
+    (else (cons (car s1) (union (cdr s1) s2)))
+  )
+)
+
+(define (filter s p)
+  (if (is-empty s)
+    '()
+    (if (p (car s)) 
+      (cons (car s) (filter (cdr s) p))
+      (filter (cdr s) p)
+    )
+  )
+)
+
+; (contains '3 '(1 2 3 4 5))
+; (is-empty '())
+; (singleton-set '3)
+; (intersection '(1 2 3) '(1 2 4))
+; (union '(1 2 3) '(2 3 4))
+(filter '(1 2 3 4 5 6) (lambda (x) (if (odd? x) #t #f)))
